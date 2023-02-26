@@ -2,18 +2,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MaxCategory {
 
-    private Map<String, String> categories = new HashMap<String, String>();
-
-    //List<Purchase> purchases = new ArrayList<>();
+    private final Map<String, String> categories = new HashMap<>();
 
     public MaxCategory(File categoriesFile) {
-        MaxCategory maxCategory = new MaxCategory();
         loadCategoriesFromFile(categoriesFile);
-
     }
 
     public MaxCategory() {
@@ -27,28 +27,35 @@ public class MaxCategory {
                 if (line.isEmpty()) {
                     break;
                 }
-                String value = reader.readLine();
-                String[] item_category = value.split("\t");
+                String[] item_category = line.split("\t");
                 categories.put(item_category[0], item_category[1]);
             }
         }
 
         catch (IOException e) {
-            System.out.println(e);
+            System.out.println(e.toString());
         }
     }
 
     public MaxPurchase getMaxPurchase(Purchases purchases) {
 
         List<Purchase> allPurchases = purchases.getPurchases();
+        for (Purchase purchase: allPurchases) {
+            String otherCategoryKey = "другое";
+            purchase.setCategory(categories.getOrDefault(purchase.getTitle(), otherCategoryKey));
+        }
 
-        allPurchases.sort(
-                Comparator.comparingInt(Purchase::getSum)
-        );
+        Map.Entry<String, Integer> maxEntry = allPurchases
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Purchase::getCategory, Collectors.summingInt(Purchase::getSum)))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .orElse(null);
 
-        Purchase maxPurchase = allPurchases.get(allPurchases.size() - 1);
-
-        return new MaxPurchase(maxPurchase.getTitle(), maxPurchase.getSum());
+        assert maxEntry != null;
+        return new MaxPurchase(maxEntry.getKey(), maxEntry.getValue());
 
     }
 

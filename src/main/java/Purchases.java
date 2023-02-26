@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Purchases {
 
-    private List<Purchase> purchases;
+    private final List<Purchase> purchases;
 
     public Purchases() {
         purchases = new ArrayList<>();

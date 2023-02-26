@@ -1,6 +1,9 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.AbstractMap;
+import java.util.Map;
+
 public class MaxPurchase {
     private String category;
     private Integer sum;
@@ -27,8 +30,10 @@ public class MaxPurchase {
     }
 
     public String toJson() throws JsonProcessingException {
+        String jsonOutKey = "maxCategory";
+        AbstractMap.SimpleEntry<String, AbstractMap.SimpleEntry> maxPurchase =
+                new AbstractMap.SimpleEntry(jsonOutKey, new AbstractMap.SimpleEntry(category, sum));
         ObjectMapper mapper = new ObjectMapper();
-        // wrap with try
-        return mapper.writeValueAsString(this);
+        return mapper.writeValueAsString(maxPurchase);
     }
 }
