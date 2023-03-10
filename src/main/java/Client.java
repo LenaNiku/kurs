@@ -14,7 +14,7 @@ public class Client {
 
         while (true) {
 
-            System.out.println("Enter purchase or type `end`");
+            System.out.println("Enter purchase (title date sum) or type `end`");
             String line = scanner.nextLine();
             if ("end".equals(line)) {
                 System.out.println("Программа завершена!");

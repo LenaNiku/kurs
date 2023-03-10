@@ -9,6 +9,7 @@ public class Main {
         File categoriesFile = new File("categories.tsv");
         MaxCategory maxCategory = new MaxCategory(categoriesFile);
         Purchases purchases = new Purchases();
+        Server server = new Server();
 
         int port = 8989;
 
@@ -21,7 +22,7 @@ public class Main {
                 ) {
                     final String messageFromClient = in.readLine();
 
-                    Purchase purchase = Server.processRequest(messageFromClient);
+                    Purchase purchase = server.processRequest(messageFromClient);
                     purchases.addPurchase(purchase);
 
                     System.out.printf("Message from client: %s, port: %d%n", messageFromClient, socket.getPort());
